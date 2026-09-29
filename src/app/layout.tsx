@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Nunito } from "next/font/google";
+import Sidebar from "@/components/sidebar";
 import "./globals.css";
 
 const display = Cormorant_Garamond({ subsets: ["latin"], variable: "--font-display" });
@@ -11,5 +12,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="pt-BR"><body className={`${display.variable} ${body.variable}`}>{children}</body></html>;
+  return <html lang="pt-BR"><body className={`${display.variable} ${body.variable}`}><Sidebar/>{children}</body></html>;
 }

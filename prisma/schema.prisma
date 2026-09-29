@@ -106,5 +106,6 @@ model AppSettings {
   id            String   @id @default("default")
   schemaVersion Int      @default(1)
   timezone      String   @default("America/Sao_Paulo")
+  passwordHash  String?
   updatedAt     DateTime @updatedAt
 }
