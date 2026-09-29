@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Food {
+  id        String   @id @default(cuid())
+  name      String
+  calories  Decimal  @db.Decimal(10, 2)
+  protein   Decimal  @db.Decimal(10, 2)
+  carbs     Decimal  @db.Decimal(10, 2)
+  fat       Decimal  @db.Decimal(10, 2)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  mealItems MealItem[]
+}
+
+model Meal {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  archived    Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  items       MealItem[]
+  foodLogs    FoodLog[]
+}
+
+model MealItem {
+  id        String   @id @default(cuid())
+  mealId    String
+  foodId    String
+  grams     Decimal  @db.Decimal(10, 2)
+  createdAt DateTime @default(now())
+  meal      Meal     @relation(fields: [mealId], references: [id], onDelete: Cascade)
+  food      Food     @relation(fields: [foodId], references: [id])
+}
+
+model FoodLog {
+  id        String   @id @default(cuid())
+  mealId    String
+  date      DateTime @db.Date
+  portions  Decimal  @default(1) @db.Decimal(8, 2)
+  createdAt DateTime @default(now())
+  meal      Meal     @relation(fields: [mealId], references: [id])
+
+  @@index([date])
+}
+
+model WaterLog {
+  id        String   @id @default(cuid())
+  date      DateTime @db.Date
+  milliliters Int
+  createdAt DateTime @default(now())
+
+  @@index([date])
+}
+
+model BowelMovement {
+  id        String   @id @default(cuid())
+  occurredAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([occurredAt])
+}
+
+model ExerciseLog {
+  id               String   @id @default(cuid())
+  date             DateTime @db.Date
+  activity         String
+  durationMinutes  Int
+  distanceKilometers Decimal? @db.Decimal(8, 2)
+  caloriesBurned   Decimal  @db.Decimal(10, 2)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([date])
+}
+
+model BasalRate {
+  id        String   @id @default(cuid())
+  effectiveDate DateTime @db.Date
+  calories  Decimal  @db.Decimal(10, 2)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([effectiveDate])
+}
+
+model DailyGoals {
+  id        String   @id @default("default")
+  calories  Decimal  @default(1265) @db.Decimal(10, 2)
+  protein   Decimal  @default(132) @db.Decimal(10, 2)
+  carbs     Decimal  @default(120) @db.Decimal(10, 2)
+  fat       Decimal  @default(31) @db.Decimal(10, 2)
+  waterMl   Int      @default(3100)
+  updatedAt DateTime @updatedAt
+}
+
+model AppSettings {
+  id            String   @id @default("default")
+  schemaVersion Int      @default(1)
+  timezone      String   @default("America/Sao_Paulo")
+  updatedAt     DateTime @updatedAt
+}
