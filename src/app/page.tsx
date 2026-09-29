@@ -1,9 +1,7 @@
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { isValidSessionToken, SESSION_COOKIE } from "@/lib/auth";
+import Link from "next/link";
+import { requireAuth } from "@/lib/require-auth";
 
 export default async function Home() {
-  const session = (await cookies()).get(SESSION_COOKIE)?.value;
-  if (!isValidSessionToken(session)) redirect("/login");
-  return <main className="shell"><p className="eyebrow">✦ seu diário de wellness</p><h1>Olá, coelhinha ♡</h1><section className="card"><h2>Fundação pronta</h2><p>O painel, cadastros e diário serão construídos nas próximas etapas. Suas metas iniciais já estão definidas no esquema: 1.265 kcal, 132 g de proteínas, 120 g de carboidratos, 31 g de gorduras e 3.100 ml de água.</p></section></main>;
+  await requireAuth();
+  return <main className="shell"><p className="eyebrow">✦ seu diário de wellness</p><h1>Olá, coelhinha ♡</h1><section className="card"><h2>Vamos começar?</h2><p>Cadastre seus alimentos e depois transforme-os em marmitas reutilizáveis.</p><Link className="button" href="/alimentos">Cadastrar alimentos</Link></section></main>;
 }
