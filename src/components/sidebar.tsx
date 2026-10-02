@@ -7,5 +7,5 @@ const items = [["/", "Início"], ["/diario", "Diário"], ["/alimentos", "Aliment
 export default async function Sidebar() {
   const store = await cookies();
   if (!isValidSessionToken(store.get(SESSION_COOKIE)?.value)) return null;
-  return <aside className="sidebar"><Link className="brand" href="/">Sayko Bunny <span>♡</span></Link><nav>{items.map(([href, label]) => <Link key={href} className={href === "/alterar-senha" ? "sidebar-last" : ""} href={href}>{label}</Link>)}</nav></aside>;
+  return <aside className="sidebar"><Link className="brand" href="/"><span className="brand-title">SayKo Bunny</span><span className="brand-symbol">.✦ ݁˖</span></Link><nav>{items.map(([href, label]) => <Link key={href} className={href === "/alterar-senha" ? "sidebar-last" : ""} href={href}>{label}</Link>)}</nav></aside>;
 }
