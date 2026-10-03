@@ -13,7 +13,7 @@ export default async function FoodsPage({ searchParams }: { searchParams: Search
   const submit = editing ? updateFood : createFood;
 
   return <main className="shell">
-    <nav className="nav"><Link href="/">Sayko Bunny ♡</Link><span>Alimentos</span></nav>
+    <nav className="nav"><Link className="return-link" href="/">⤶ voltar</Link><span>Alimentos</span></nav>
     <p className="eyebrow">✦ cadastros</p><h1>Alimentos</h1>
     <section className="card form-card"><h2>{editing ? "Editar alimento" : "Novo alimento"}</h2><p>Valores nutricionais sempre por 100 g.</p>
       <form action={submit} className="food-form">{editing && <input type="hidden" name="id" value={editing.id} />}
