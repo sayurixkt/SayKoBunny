@@ -5,7 +5,7 @@ button, input { font:inherit; }
 .shell { width:min(100% - 2rem, 68rem); margin:auto; padding:2rem 0; }
 .card { background:rgba(255,245,248,.09); border:1px solid rgba(255,214,231,.25); box-shadow:0 1rem 3rem rgba(0,0,0,.22); border-radius:1.5rem; padding:1.5rem; backdrop-filter:blur(12px); }
 h1,h2,p { margin-top:0; } h1,h2 { font-family:var(--font-display), serif; font-weight:700; }
-h1 { font-size:clamp(2.6rem, 8vw, 4.6rem); line-height:.9; }.login-title { font-family:var(--font-logo), cursive; line-height:1.15; }.login-title span { color:var(--pink); font-family:var(--font-symbol), sans-serif; font-size:.28em; vertical-align:middle; white-space:nowrap; }
+h1 { font-size:clamp(2.6rem, 8vw, 4.6rem); line-height:.9; }.home-title,.login-title { font-family:var(--font-logo), cursive; line-height:1.15; }.login-title span { color:var(--pink); font-family:var(--font-symbol), sans-serif; font-size:.28em; vertical-align:middle; white-space:nowrap; }
 .eyebrow { color:var(--pink); font-weight:800; letter-spacing:.08em; text-transform:uppercase; font-size:.75rem; }
 .button { display:inline-flex; justify-content:center; border:0; border-radius:999px; background:var(--pink); color:var(--plum); padding:.8rem 1.25rem; font-weight:900; cursor:pointer; }
 .field { display:grid; gap:.4rem; margin-bottom:1rem; font-weight:800; } .field input { border:1px solid #ffffff33; border-radius:.8rem; padding:.75rem; color:var(--cream); background:#21121faa; }
