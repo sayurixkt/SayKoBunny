@@ -1,7 +1,7 @@
-import Link from "next/link";
+import DiaryContent from "@/components/diary-content";
 import { requireAuth } from "@/lib/require-auth";
 
-export default async function Home() {
+export default async function Home({ searchParams }: { searchParams: Promise<{ date?: string }> }) {
   await requireAuth();
-  return <main className="shell"><p className="eyebrow">✦ wellness diary</p><h1 className="home-title">stay focused</h1><section className="card"><h2>Vamos começar?</h2><p>Cadastre alimentos, monte marmitas e registre seu dia.</p><div className="inline-actions"><Link className="button" href="/diario">Abrir diário</Link><Link className="ghost" href="/alimentos">Alimentos</Link><Link className="ghost" href="/marmitas">Marmitas</Link><Link className="ghost" href="/configuracoes">Metas & basal</Link></div></section></main>;
+  return <main className="shell"><DiaryContent searchParams={searchParams} /></main>;
 }

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import { isValidSessionToken, SESSION_COOKIE } from "@/lib/auth";
 
-const items = [["/", "Início"], ["/diario", "Diário"], ["/alimentos", "Alimentos"], ["/marmitas", "Marmitas"], ["/configuracoes", "Metas & basal"], ["/alterar-senha", "Alterar senha"]] as const;
+const items = [["/", "Início"], ["/alimentos", "Alimentos"], ["/marmitas", "Marmitas"], ["/configuracoes", "Metas & basal"], ["/alterar-senha", "Alterar senha"]] as const;
 
 export default async function Sidebar() {
   const store = await cookies();
