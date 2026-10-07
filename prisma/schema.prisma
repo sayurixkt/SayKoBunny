@@ -18,6 +18,7 @@ model Food {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   mealItems MealItem[]
+  foodLogs  FoodLog[]
 }
 
 model Meal {
@@ -42,14 +43,18 @@ model MealItem {
 }
 
 model FoodLog {
-  id        String   @id @default(cuid())
-  mealId    String
-  date      DateTime @db.Date
-  portions  Decimal  @default(1) @db.Decimal(8, 2)
-  createdAt DateTime @default(now())
-  meal      Meal     @relation(fields: [mealId], references: [id])
+  id         String   @id @default(cuid())
+  mealId     String?
+  foodId     String?
+  mealPeriod String   @default("ALMOCO")
+  date       DateTime @db.Date
+  portions   Decimal  @default(1) @db.Decimal(8, 2)
+  createdAt  DateTime @default(now())
+  meal       Meal?    @relation(fields: [mealId], references: [id])
+  food       Food?    @relation(fields: [foodId], references: [id])
 
   @@index([date])
+  @@index([foodId])
 }
 
 model WaterLog {

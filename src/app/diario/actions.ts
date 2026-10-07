@@ -7,8 +7,16 @@ import { databaseDate } from "@/lib/dates";
 
 const date = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 const id = z.string().cuid();
-function refresh(day: string) { revalidatePath(`/diario?date=${day}`); revalidatePath("/diario"); }
-export async function addFoodLog(formData: FormData) { await requireAuth(); const day = date.parse(formData.get("date")); await prisma.foodLog.create({ data: { date: databaseDate(day), mealId: id.parse(formData.get("mealId")), portions: z.coerce.number().positive().max(20).parse(formData.get("portions")) } }); refresh(day); }
+function refresh(day: string) { revalidatePath(`/?date=${day}`); revalidatePath("/"); revalidatePath("/diario"); }
+export async function addFoodLog(formData: FormData) {
+  await requireAuth();
+  const day = date.parse(formData.get("date"));
+  const mealId = formData.get("mealId") ? id.parse(formData.get("mealId")) : undefined;
+  const foodId = formData.get("foodId") ? id.parse(formData.get("foodId")) : undefined;
+  if ((mealId && foodId) || (!mealId && !foodId)) throw new Error("Selecione uma marmita ou um alimento.");
+  await prisma.foodLog.create({ data: { date: databaseDate(day), mealId, foodId, mealPeriod: z.enum(["CAFE_DA_MANHA", "ALMOCO", "CAFE_DA_TARDE", "JANTAR"]).parse(formData.get("mealPeriod")), portions: 1 } });
+  refresh(day);
+}
 export async function addWater(formData: FormData) { await requireAuth(); const day = date.parse(formData.get("date")); await prisma.waterLog.create({ data: { date: databaseDate(day), milliliters: z.coerce.number().int().positive().max(10000).parse(formData.get("milliliters")) } }); refresh(day); }
 export async function addBowel(formData: FormData) { await requireAuth(); const day = date.parse(formData.get("date")); const time = z.string().regex(/^\d{2}:\d{2}$/).parse(formData.get("time")); await prisma.bowelMovement.create({ data: { occurredAt: new Date(`${day}T${time}:00-03:00`) } }); refresh(day); }
 export async function addExercise(formData: FormData) { await requireAuth(); const day = date.parse(formData.get("date")); await prisma.exerciseLog.create({ data: { date: databaseDate(day), activity: z.string().trim().min(2).max(120).parse(formData.get("activity")), durationMinutes: z.coerce.number().int().positive().max(1440).parse(formData.get("duration")), distanceKilometers: formData.get("distance") ? z.coerce.number().min(0).max(1000).parse(formData.get("distance")) : null, caloriesBurned: z.coerce.number().min(0).max(10000).parse(formData.get("calories")) } }); refresh(day); }

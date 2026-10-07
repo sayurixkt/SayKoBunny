@@ -1,0 +1,15 @@
+ALTER TABLE "FoodLog"
+  ADD COLUMN IF NOT EXISTS "foodId" TEXT,
+  ADD COLUMN IF NOT EXISTS "mealPeriod" TEXT NOT NULL DEFAULT 'ALMOCO';
+
+ALTER TABLE "FoodLog" ALTER COLUMN "mealId" DROP NOT NULL;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'FoodLog_foodId_fkey') THEN
+    ALTER TABLE "FoodLog" ADD CONSTRAINT "FoodLog_foodId_fkey"
+      FOREIGN KEY ("foodId") REFERENCES "Food"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+  END IF;
+END $$;
+
+CREATE INDEX IF NOT EXISTS "FoodLog_foodId_idx" ON "FoodLog"("foodId");
