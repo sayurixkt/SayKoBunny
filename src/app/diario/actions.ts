@@ -14,7 +14,8 @@ export async function addFoodLog(formData: FormData) {
   const mealId = formData.get("mealId") ? id.parse(formData.get("mealId")) : undefined;
   const foodId = formData.get("foodId") ? id.parse(formData.get("foodId")) : undefined;
   if ((mealId && foodId) || (!mealId && !foodId)) throw new Error("Selecione uma marmita ou um alimento.");
-  await prisma.foodLog.create({ data: { date: databaseDate(day), mealId, foodId, mealPeriod: z.enum(["CAFE_DA_MANHA", "ALMOCO", "CAFE_DA_TARDE", "JANTAR"]).parse(formData.get("mealPeriod")), portions: 1 } });
+  const foodGrams = foodId ? z.coerce.number().positive().max(10000).parse(formData.get("foodGrams")) : undefined;
+  await prisma.foodLog.create({ data: { date: databaseDate(day), mealId, foodId, mealPeriod: z.enum(["CAFE_DA_MANHA", "ALMOCO", "CAFE_DA_TARDE", "JANTAR"]).parse(formData.get("mealPeriod")), portions: foodGrams ? foodGrams / 100 : 1 } });
   refresh(day);
 }
 export async function addWater(formData: FormData) { await requireAuth(); const day = date.parse(formData.get("date")); await prisma.waterLog.create({ data: { date: databaseDate(day), milliliters: z.coerce.number().int().positive().max(10000).parse(formData.get("milliliters")) } }); refresh(day); }
