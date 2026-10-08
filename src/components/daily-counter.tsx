@@ -21,7 +21,7 @@ export function DailyCounter({ action, day, fieldName, icon, iconAlt, step, suff
   return <form action={action} className="counter-form">
     <input type="hidden" name="date" value={day}/>
     <input type="hidden" name={fieldName} value={amount}/>
-    <Image className="tracker-icon" src={icon} alt={iconAlt} width={50} height={50}/>
+    <Image className="tracker-icon" src={icon} alt={iconAlt} width={100} height={100}/>
     <div className="counter-controls" aria-label={`Quantidade: ${amount}${suffix ? ` ${suffix}` : ""}`}>
       <button className="counter-button counter-minus" type="button" onClick={decrease} aria-label="Diminuir">▬</button>
       <output aria-live="polite">{amount}{suffix && <span> {suffix}</span>}</output>
