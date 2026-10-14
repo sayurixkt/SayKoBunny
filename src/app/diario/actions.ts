@@ -18,6 +18,15 @@ export async function addFoodLog(formData: FormData) {
   await prisma.foodLog.create({ data: { date: databaseDate(day), mealId, foodId, mealPeriod: z.enum(["CAFE_DA_MANHA", "ALMOCO", "CAFE_DA_TARDE", "JANTAR"]).parse(formData.get("mealPeriod")), portions: foodGrams ? foodGrams / 100 : 1 } });
   refresh(day);
 }
+export async function updateFoodLog(formData: FormData) {
+  await requireAuth();
+  const day = date.parse(formData.get("date"));
+  const logId = id.parse(formData.get("id"));
+  const log = await prisma.foodLog.findUniqueOrThrow({ where: { id: logId }, select: { foodId: true } });
+  const foodGrams = log.foodId ? z.coerce.number().positive().max(10000).parse(formData.get("foodGrams")) : undefined;
+  await prisma.foodLog.update({ where: { id: logId }, data: { mealPeriod: z.enum(["CAFE_DA_MANHA", "ALMOCO", "CAFE_DA_TARDE", "JANTAR"]).parse(formData.get("mealPeriod")), ...(foodGrams ? { portions: foodGrams / 100 } : {}) } });
+  refresh(day);
+}
 export async function addWater(formData: FormData) { await requireAuth(); const day = date.parse(formData.get("date")); await prisma.waterLog.create({ data: { date: databaseDate(day), milliliters: z.coerce.number().int().positive().max(10000).parse(formData.get("milliliters")) } }); refresh(day); }
 export async function addBowel(formData: FormData) { await requireAuth(); const day = date.parse(formData.get("date")); const count = z.coerce.number().int().positive().max(20).parse(formData.get("count")); const occurredAt = databaseDate(day); await prisma.bowelMovement.createMany({ data: Array.from({ length: count }, (_, index) => ({ occurredAt: new Date(occurredAt.getTime() + index * 1000) })) }); refresh(day); }
 export async function addExercise(formData: FormData) { await requireAuth(); const day = date.parse(formData.get("date")); await prisma.exerciseLog.create({ data: { date: databaseDate(day), activity: z.string().trim().min(2).max(120).parse(formData.get("activity")), durationMinutes: z.coerce.number().int().positive().max(1440).parse(formData.get("duration")), distanceKilometers: formData.get("distance") ? z.coerce.number().min(0).max(1000).parse(formData.get("distance")) : null, caloriesBurned: z.coerce.number().min(0).max(10000).parse(formData.get("calories")) } }); refresh(day); }
